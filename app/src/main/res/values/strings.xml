@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="forgot_password_text">¿Olvidó su contraseña? <u><b><font color="#000000">&#95;</font></b></u></string>
+</resources>
