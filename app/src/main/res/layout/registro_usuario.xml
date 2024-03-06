@@ -60,4 +60,14 @@
         android:text="Registrar"
         android:textColor="#000000"/>
 
+    <Button
+        android:id="@+id/buttonVolverLogin"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_rounded"
+        android:onClick="buttonVolverLogin"
+        android:text="REGRESAR"
+        android:textColor="#000000" />
+
+
 </LinearLayout>

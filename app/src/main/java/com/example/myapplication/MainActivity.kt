@@ -35,11 +35,9 @@ class MainActivity : AppCompatActivity() {
         val url = "http://192.168.56.1/proyectoReciclaje/validar_usuario.php"
         val queue = Volley.newRequestQueue(this)
         val request = object : StringRequest(Method.POST, url,
-            Response.Listener<String> { response ->
+            Response.Listener<String> { resultado ->
 
-                Log.d("RESPONSE", response)
-
-                if (response.trim().equals("success", ignoreCase = true)) {
+                if (resultado.trim() == "success") {
                     Toast.makeText(this, "Inicio de sesion exitoso", Toast.LENGTH_LONG).show()
                     val intent = Intent(this, ModuloClienteActivity::class.java)
                     startActivity(intent)
@@ -93,6 +91,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         queue.add(resultadoPost)
+    }
+
+    fun buttonVolverLogin(view: View) {
+
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
 }
