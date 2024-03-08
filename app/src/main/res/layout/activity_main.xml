@@ -7,47 +7,6 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/button_social"
-        android:scaleType="fitCenter"
-        android:src="@drawable/instagram"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        tools:src="@drawable/instagram" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/button_social"
-        android:scaleType="fitCenter"
-        android:src="@drawable/google"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        tools:src="@drawable/google" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/button_social"
-        android:scaleType="fitCenter"
-        android:src="@drawable/facebook"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        tools:src="@drawable/facebook" />
-
     <EditText
         android:id="@+id/editTextText2"
         android:layout_width="match_parent"
@@ -57,7 +16,7 @@
         android:layout_marginEnd="32dp"
         android:backgroundTint="#99CC99"
         android:ems="10"
-        android:hint="Email"
+        android:hint="Correo electronico"
         android:inputType="textEmailAddress"
         android:textColor="#000000"
         android:textColorHint="#000000"
@@ -75,7 +34,7 @@
         android:layout_marginEnd="32dp"
         android:backgroundTint="#99CC99"
         android:ems="10"
-        android:hint="Password"
+        android:hint="Contraseña"
         android:inputType="textPassword"
         android:textColor="#000000"
         android:textColorHint="#000000"
@@ -130,7 +89,7 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/button_rounded"
         android:onClick="buttonValidarUsuario"
-        android:text="LOGIN"
+        android:text="INICIAR SESIÓN"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -146,7 +105,7 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/button_rounded_border"
         android:onClick="mostrarFormularioRegistro"
-        android:text="REGISTER"
+        android:text="REGISTRARSE"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

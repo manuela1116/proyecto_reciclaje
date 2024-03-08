@@ -56,16 +56,20 @@
         android:id="@+id/buttonRegistrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_rounded_border"
+        android:background="@drawable/button_rounded"
         android:onClick="buttonRegistrar"
-        android:text="Registrar"
+        android:text="Guardar registro"
         android:textColor="#000000" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
 
     <Button
         android:id="@+id/buttonVolverLogin"
-        android:layout_width="220dp"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_rounded"
+        android:background="@drawable/button_rounded_border"
         android:onClick="buttonVolverLogin"
         android:text="REGRESAR"
         android:textColor="#000000" />
