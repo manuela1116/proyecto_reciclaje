@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_rounded_border"
-        android:onClick="buttonRegistrarUsuario"
+        android:onClick="buttonRegistrar"
         android:text="Registrar"
         android:textColor="#000000" />
 
