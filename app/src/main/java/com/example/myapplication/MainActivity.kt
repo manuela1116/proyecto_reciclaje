@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -70,6 +71,69 @@ class MainActivity : AppCompatActivity() {
         editTextContrasena=findViewById(R.id.editTextContrasena)
         editTextDireccion=findViewById(R.id.editTextDireccion)
         editTextEstrato=findViewById(R.id.editTextEstrato)
+
+        val TextViewMensaje = findViewById<TextView>(R.id.textViewMensaje)
+
+        editTextCorreo?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val correo = editTextCorreo?.text.toString()
+                if (!correo.isEmpty()) {
+                    verificarCorreoElectronico(correo)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    fun verificarCorreoElectronico(correo: String) {
+        val url = "http://192.168.56.1/proyectoReciclaje/verificar_correo.php"
+
+        val request = object : StringRequest(Method.POST, url,
+            Response.Listener<String> { response ->
+                if (response.trim() == "El usuario ya se encuentra registrado") {
+                    mostrarMensajeError("El correo electronico ya esta registrado", Toast.LENGTH_LONG)
+                    deshabilitarCamposRegistro()
+                } else {
+                    mostrarMensajeError("El correo electrónico está disponible para el registro", Toast.LENGTH_LONG)
+                    habilitarCamposRegistro()
+                }
+            }, Response.ErrorListener { error ->
+                mostrarMensajeError("Error al conectar con el servidor: ${error.message}", Toast.LENGTH_LONG)
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["correo_usuario"] = correo
+                return params
+            }
+        }
+        Volley.newRequestQueue(this).add(request)
+    }
+
+    fun mostrarMensajeError(mensaje: String, duracion: Int) {
+        Toast.makeText(this, mensaje, duracion).show()
+    }
+
+    fun deshabilitarCamposRegistro() {
+        editTextNombre?.isEnabled = false
+        editTextApellido?.isEnabled = false
+        editTextTelefono?.isEnabled = false
+        editTextContrasena?.isEnabled = false
+        editTextDireccion?.isEnabled = false
+        editTextEstrato?.isEnabled = false
+    }
+
+    fun habilitarCamposRegistro() {
+        editTextNombre?.isEnabled = true
+        editTextApellido?.isEnabled = true
+        editTextTelefono?.isEnabled = true
+        editTextContrasena?.isEnabled = true
+        editTextDireccion?.isEnabled = true
+        editTextEstrato?.isEnabled = true
+
+        println("Campos habilitados")
     }
 
     fun buttonRegistrar(view:View) {
