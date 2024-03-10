@@ -52,12 +52,16 @@
         android:layout_height="wrap_content"
         android:hint="Dirección" />
 
-    <EditText
-        android:id="@+id/editTextEstrato"
+    <Spinner
+        android:id="@+id/spinnerEstrato"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="Estrato" />
+        android:layout_height="36dp"
+        android:hint="Estrato"
+        android:inputType="number" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
 
     <Button
         android:id="@+id/buttonRegistrar"

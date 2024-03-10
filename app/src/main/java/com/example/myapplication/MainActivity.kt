@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
@@ -23,8 +25,6 @@ class MainActivity : AppCompatActivity() {
     var editTextCorreo:EditText?=null
     var editTextContrasena:EditText?=null
     var editTextDireccion:EditText?=null
-    var editTextEstrato:EditText?=null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (resultado.trim() == "success") {
                     Toast.makeText(this, "Inicio de sesion exitoso", Toast.LENGTH_LONG).show()
+                    limpiarCamposIngreso()
                     val intent = Intent(this, ModuloClienteActivity::class.java)
                     startActivity(intent)
                 }else {
@@ -62,6 +63,11 @@ class MainActivity : AppCompatActivity() {
         queue.add(request)
     }
 
+    fun limpiarCamposIngreso() {
+        editTextCorreo?.setText("")
+        editTextContrasena?.setText("")
+    }
+
     fun mostrarFormularioRegistro(view: View){
         setContentView(R.layout.registro_usuario)
         editTextCorreo=findViewById(R.id.editTextCorreo)
@@ -70,7 +76,14 @@ class MainActivity : AppCompatActivity() {
         editTextTelefono=findViewById(R.id.editTextTelefono)
         editTextContrasena=findViewById(R.id.editTextContrasena)
         editTextDireccion=findViewById(R.id.editTextDireccion)
-        editTextEstrato=findViewById(R.id.editTextEstrato)
+
+        val spinnerEstrato=findViewById<Spinner>(R.id.spinnerEstrato)
+        val estratoOptions = arrayOf("Estrato","Estrato 1", "Estrato 2", "Estrato 3", "Estrato 4", "Estrato 5", "Estrato 6")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estratoOptions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerEstrato.adapter = adapter
+
+        spinnerEstrato.setSelection(0)
 
         val TextViewMensaje = findViewById<TextView>(R.id.textViewMensaje)
 
@@ -86,6 +99,41 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+        editTextContrasena?.addTextChangedListener(object  : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val contrasena = editTextContrasena?.text.toString()
+                if (!contrasena.isEmpty()) {
+                    verificarContrasena(contrasena)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    fun verificarContrasena(contrasena: String) {
+        val url = "http://192.168.56.1/proyectoReciclaje/verificar_contraseña.php"
+        val request = object : StringRequest(Method.POST, url,
+            Response.Listener<String> { response ->
+                if (response.trim() == "true") {
+                    mostrarMensajeError("La contraseña cumple con los requisitos", Toast.LENGTH_LONG)
+                    habilitarCamposRegistro()
+                } else {
+                    mostrarMensajeError("La contraseña debe tener al menos 8 caracteres, una mayúscula y un número", Toast.LENGTH_LONG)
+                    deshabilitarCamposRegistro()
+                }
+            }, Response.ErrorListener { error ->
+                mostrarMensajeError("Error al conectar con el servidor: ${error.message}", Toast.LENGTH_LONG)
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["contrasena"] = contrasena
+                return params
+            }
+        }
+        Volley.newRequestQueue(this).add(request)
     }
 
     fun verificarCorreoElectronico(correo: String) {
@@ -120,9 +168,7 @@ class MainActivity : AppCompatActivity() {
         editTextNombre?.isEnabled = false
         editTextApellido?.isEnabled = false
         editTextTelefono?.isEnabled = false
-        editTextContrasena?.isEnabled = false
         editTextDireccion?.isEnabled = false
-        editTextEstrato?.isEnabled = false
     }
 
     fun habilitarCamposRegistro() {
@@ -131,9 +177,7 @@ class MainActivity : AppCompatActivity() {
         editTextTelefono?.isEnabled = true
         editTextContrasena?.isEnabled = true
         editTextDireccion?.isEnabled = true
-        editTextEstrato?.isEnabled = true
 
-        println("Campos habilitados")
     }
 
     fun buttonRegistrar(view:View) {
@@ -142,6 +186,7 @@ class MainActivity : AppCompatActivity() {
         var resultadoPost = object : StringRequest(Request.Method.POST,url,
             Response.Listener<String> { response ->
                 Toast.makeText(this,"Usuario registrado exitosamente",Toast.LENGTH_LONG).show()
+                limpiarCampos()
             },Response.ErrorListener { error ->
                 Toast.makeText(this,"Error $error ",Toast.LENGTH_LONG).show()
             }){
@@ -153,12 +198,23 @@ class MainActivity : AppCompatActivity() {
                 parametros.put("numerotelefonico_usuario",editTextTelefono?.text.toString())
                 parametros.put("contrasena",editTextContrasena?.text.toString())
                 parametros.put("direccion_usuario",editTextDireccion?.text.toString())
-                parametros.put("estrato_usuario",editTextEstrato?.text.toString())
+                parametros.put("estrato_usuario", (findViewById<Spinner>(R.id.spinnerEstrato)).selectedItemPosition.toString())
 
                 return parametros
             }
         }
         queue.add(resultadoPost)
+    }
+
+    fun limpiarCampos() {
+        editTextCorreo?.setText("")
+        editTextNombre?.setText("")
+        editTextApellido?.setText("")
+        editTextTelefono?.setText("")
+        editTextContrasena?.setText("")
+        editTextDireccion?.setText("")
+        val spinnerEstrato = findViewById<Spinner>(R.id.spinnerEstrato)
+        spinnerEstrato.setSelection(0)
     }
 
     fun buttonVolverLogin(view:View) {
