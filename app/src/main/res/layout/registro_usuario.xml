@@ -35,8 +35,9 @@
         android:id="@+id/editTextTelefono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Número Telefónico"
         android:inputType="phone"
-        android:hint="Número Telefónico" />
+        android:textColorHighlight="#673AB7" />
 
 
     <EditText

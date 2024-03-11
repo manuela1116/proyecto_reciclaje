@@ -67,25 +67,25 @@
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <TextView
-        android:id="@+id/forgotPasswordTextView"
-        android:layout_width="185dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:text="@string/forgot_password_text"
-        android:textColor="#000000"
+    <Button
+        android:id="@+id/buttonConnectPHP"
+        android:layout_width="220dp"
+        android:layout_height="58dp"
+        android:text="RECUPERAR CONTRASEÑA"
+        android:textColor="#020202"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.141"
+        app:layout_constraintHorizontal_bias="0.167"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+        app:layout_constraintTop_toBottomOf="@id/editTextText3"
+        app:layout_constraintVertical_bias="0.039" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="104dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/button_rounded"
         android:onClick="buttonValidarUsuario"
@@ -108,7 +108,7 @@
         android:text="REGISTRARSE"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

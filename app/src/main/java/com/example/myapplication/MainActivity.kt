@@ -1,12 +1,14 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
@@ -15,7 +17,9 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import org.json.JSONObject
+import java.lang.StringBuilder
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,12 +36,45 @@ class MainActivity : AppCompatActivity() {
         editTextCorreo = findViewById(R.id.editTextText2)
         editTextContrasena = findViewById(R.id.editTextText3)
 
+        val btnLink = findViewById<Button>(R.id.buttonConnectPHP)
+
+        btnLink.setOnClickListener {
+            val url = "http://192.168.56.1/proyectoReciclaje/recordarcontraseña.php"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        }
+
+    }
+
+    class PasswordEncryptor {
+        fun encryptPassword(password: String): String {
+            try {
+                val md = MessageDigest.getInstance("SHA-256")
+                val digest = md.digest(password.toByteArray())
+                return bytesToHex(digest)
+            } catch (e: NoSuchAlgorithmException) {
+                e.printStackTrace()
+            }
+            return ""
+        }
+        private fun bytesToHex(bytes: ByteArray): String {
+            val hexString = StringBuilder()
+            for (byte in bytes) {
+                val hex = Integer.toHexString(0xff and byte.toInt())
+                if (hex.length == 1) {
+                    hexString.append('0')
+                }
+                hexString.append(hex)
+            }
+            return hexString.toString()
+        }
     }
 
     fun buttonValidarUsuario(view: View) {
 
         val url = "http://192.168.56.1/proyectoReciclaje/validar_usuario.php"
         val queue = Volley.newRequestQueue(this)
+        val encryptor = PasswordEncryptor()
         val request = object : StringRequest(Method.POST, url,
             Response.Listener<String> { resultado ->
 
@@ -55,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             override fun getParams(): MutableMap<String, String> {
                 val parametros=HashMap<String,String>()
                 parametros.put("correo_usuario",editTextCorreo?.text.toString())
-                parametros.put("contrasena",editTextContrasena?.text.toString())
+                parametros.put("contrasena",encryptor.encryptPassword(editTextContrasena?.text.toString()))
 
                 return parametros
             }
@@ -183,6 +220,7 @@ class MainActivity : AppCompatActivity() {
     fun buttonRegistrar(view:View) {
         val url="http://192.168.56.1/proyectoReciclaje/registrar_usuario.php"
         val queue=Volley.newRequestQueue(this)
+        val encryptor = PasswordEncryptor()
         var resultadoPost = object : StringRequest(Request.Method.POST,url,
             Response.Listener<String> { response ->
                 Toast.makeText(this,"Usuario registrado exitosamente",Toast.LENGTH_LONG).show()
@@ -196,7 +234,7 @@ class MainActivity : AppCompatActivity() {
                 parametros.put("nombre_usuario",editTextNombre?.text.toString())
                 parametros.put("apellido_usuario",editTextApellido?.text.toString())
                 parametros.put("numerotelefonico_usuario",editTextTelefono?.text.toString())
-                parametros.put("contrasena",editTextContrasena?.text.toString())
+                parametros.put("contrasena",encryptor.encryptPassword(editTextContrasena?.text.toString()))
                 parametros.put("direccion_usuario",editTextDireccion?.text.toString())
                 parametros.put("estrato_usuario", (findViewById<Spinner>(R.id.spinnerEstrato)).selectedItemPosition.toString())
 
