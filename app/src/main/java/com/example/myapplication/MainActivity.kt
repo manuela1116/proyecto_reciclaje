@@ -224,6 +224,8 @@ class MainActivity : AppCompatActivity() {
         var resultadoPost = object : StringRequest(Request.Method.POST,url,
             Response.Listener<String> { response ->
                 Toast.makeText(this,"Usuario registrado exitosamente",Toast.LENGTH_LONG).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
                 limpiarCampos()
             },Response.ErrorListener { error ->
                 Toast.makeText(this,"Error $error ",Toast.LENGTH_LONG).show()
@@ -253,12 +255,6 @@ class MainActivity : AppCompatActivity() {
         editTextDireccion?.setText("")
         val spinnerEstrato = findViewById<Spinner>(R.id.spinnerEstrato)
         spinnerEstrato.setSelection(0)
-    }
-
-    fun buttonVolverLogin(view:View) {
-
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
     }
 
 }
