@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -39,11 +40,39 @@ class MainActivity : AppCompatActivity() {
         val btnLink = findViewById<Button>(R.id.buttonConnectPHP)
 
         btnLink.setOnClickListener {
-            val url = "http://192.168.56.1/proyectoReciclaje/recordarcontraseña.php"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
+            val correoUsuario = editTextCorreo?.text.toString()
+            solicitarRecuperacionContrasena(correoUsuario)
         }
 
+    }
+
+    fun solicitarRecuperacionContrasena(correoUsuario: String) {
+        val url = "http://192.168.56.1/proyectoReciclaje/recordarcontraseña.php"
+        val queue = Volley.newRequestQueue(this)
+        val request = object : StringRequest (Method.POST, url,
+            Response.Listener<String> { response ->
+                mostrarContrasenaGenerada(response)
+            }, Response.ErrorListener { error ->
+                Toast.makeText(this, "Error: $error", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["email"] = correoUsuario
+                return params
+            }
+        }
+        queue.add(request)
+    }
+
+    fun mostrarContrasenaGenerada(contrasenaGenerada: String) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Contraseña generada")
+        alertDialogBuilder.setMessage("La contraseña generada es: $contrasenaGenerada")
+        alertDialogBuilder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     class PasswordEncryptor {
