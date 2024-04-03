@@ -1,7 +1,6 @@
     package com.example.myapplication
     
     import android.content.Intent
-    import android.net.Uri
     import androidx.appcompat.app.AppCompatActivity
     import android.os.Bundle
     import android.text.Editable
@@ -22,8 +21,8 @@
     import java.security.MessageDigest
     import java.security.NoSuchAlgorithmException
     
-    
     class MainActivity : AppCompatActivity() {
+
         var editTextNombre:EditText?=null
         var editTextApellido:EditText?=null
         var editTextTelefono:EditText?=null
@@ -253,8 +252,8 @@
             var resultadoPost = object : StringRequest(Request.Method.POST,url,
                 Response.Listener<String> { response ->
                     Toast.makeText(this,"Usuario registrado exitosamente",Toast.LENGTH_LONG).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    val tipoUsuarioSeleccionado = obtenerTipoUsuarioSeleccionado()
+                    redirigirSegunTipoUsuario(tipoUsuarioSeleccionado)
                     limpiarCampos()
                 },Response.ErrorListener { error ->
                     Toast.makeText(this,"Error $error ",Toast.LENGTH_LONG).show()
@@ -284,6 +283,20 @@
             editTextDireccion?.setText("")
             val spinnerEstrato = findViewById<Spinner>(R.id.spinnerEstrato)
             spinnerEstrato.setSelection(0)
+        }
+
+        fun obtenerTipoUsuarioSeleccionado(): String {
+            val spinnerTipoUsuario = findViewById<Spinner>(R.id.spinnerTipoUsuario)
+            return spinnerTipoUsuario.selectedItem.toString()
+        }
+
+        fun redirigirSegunTipoUsuario(tipo_usuario: String) {
+            val intent = when (tipo_usuario) {
+                "Cliente" -> Intent(this, ModuloClienteActivity::class.java)
+                "Trabajador" -> Intent(this, ModuloEmpresaActivity::class.java)
+                else -> Intent(this, MainActivity::class.java)
+            }
+            startActivity(intent)
         }
     
     }
