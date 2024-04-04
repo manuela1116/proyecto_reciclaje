@@ -249,12 +249,16 @@
             val url="http://192.168.56.1/proyectoReciclaje/registrar_usuario.php"
             val queue=Volley.newRequestQueue(this)
             val encryptor = PasswordEncryptor()
+            val tipoUsuarioSeleccionado = obtenerTipoUsuarioSeleccionado()
             var resultadoPost = object : StringRequest(Request.Method.POST,url,
                 Response.Listener<String> { response ->
-                    Toast.makeText(this,"Usuario registrado exitosamente",Toast.LENGTH_LONG).show()
-                    val tipoUsuarioSeleccionado = obtenerTipoUsuarioSeleccionado()
-                    redirigirSegunTipoUsuario(tipoUsuarioSeleccionado)
-                    limpiarCampos()
+                    val idUsuarioRecienRegistrado = response.toIntOrNull()
+                    if (idUsuarioRecienRegistrado != null) {
+                        Toast.makeText(this,"Usuario registrado exitosamente",Toast.LENGTH_LONG).show()
+                        actualizarTipoUsuario(tipoUsuarioSeleccionado, idUsuarioRecienRegistrado)
+                        limpiarCampos()
+                    }
+
                 },Response.ErrorListener { error ->
                     Toast.makeText(this,"Error $error ",Toast.LENGTH_LONG).show()
                 }){
@@ -267,6 +271,7 @@
                     parametros.put("contrasena",encryptor.encryptPassword(editTextContrasena?.text.toString()))
                     parametros.put("direccion_usuario",editTextDireccion?.text.toString())
                     parametros.put("estrato_usuario", (findViewById<Spinner>(R.id.spinnerEstrato)).selectedItemPosition.toString())
+                    parametros.put("tipo_usuario", tipoUsuarioSeleccionado)
     
                     return parametros
                 }
@@ -285,18 +290,28 @@
             spinnerEstrato.setSelection(0)
         }
 
+        fun actualizarTipoUsuario(tipo_usuario: String, id_usuario: Int) {
+            val url = "http://192.168.56.1/proyectoReciclaje/administrador.php"
+            val queue = Volley.newRequestQueue(this)
+            var resultadoPost = object : StringRequest(Request.Method.POST, url,
+                Response.Listener<String> { response ->
+                    Toast.makeText(this, "Tipo de usuario actualizado correctamente",Toast.LENGTH_LONG).show()
+                },Response.ErrorListener { error ->
+                    Toast.makeText(this, "Error al actualizar el tipo de usuario: $error",Toast.LENGTH_LONG).show()
+                }) {
+                override fun getParams(): MutableMap<String, String> {
+                    val parametros = HashMap<String, String>()
+                    parametros.put("id_usuario", id_usuario.toString())
+                    parametros.put("tipo_usuario", tipo_usuario)
+                    return parametros
+                }
+            }
+            queue.add(resultadoPost)
+        }
+
         fun obtenerTipoUsuarioSeleccionado(): String {
             val spinnerTipoUsuario = findViewById<Spinner>(R.id.spinnerTipoUsuario)
             return spinnerTipoUsuario.selectedItem.toString()
-        }
-
-        fun redirigirSegunTipoUsuario(tipo_usuario: String) {
-            val intent = when (tipo_usuario) {
-                "Cliente" -> Intent(this, ModuloClienteActivity::class.java)
-                "Trabajador" -> Intent(this, ModuloEmpresaActivity::class.java)
-                else -> Intent(this, MainActivity::class.java)
-            }
-            startActivity(intent)
         }
     
     }
